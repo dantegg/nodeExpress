@@ -1,5 +1,14 @@
 var express = require('express');
 
+
+var slogans=[
+  'mid or feed！',
+  'noob!',
+  'add blue!',
+  'chick,pls!',
+  'asian monkey!'
+]
+
 var app = express();
 
 var handlebars = require('express3-handlebars').create({defaultLayout:'main'});
@@ -9,16 +18,23 @@ app.set('view engine','handlebars');
 
 app.set('port',process.env.PORT || 3000);
 
+
+app.use(express.static(__dirname+'/public'));
+
+
 app.get('/',function(req,res){
   //res.type('text/plain');
   //res.send('Dantegg\'s WORLD!');
-  res.render('home');
+  var randomSlogans = slogans[Math.floor(Math.random()*slogans.length)];
+  console.log(randomSlogans)
+  res.render('home',{slogan:randomSlogans});
 })
 
 
 app.get('/about',function(req,res){
   //res.type('text/plain');
   //res.send('About Dantegg\'s WORLD!');
+
   res.render('about');
 })
 
