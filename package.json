@@ -13,6 +13,7 @@
   "author": "dantegg",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "express3-handlebars": "^0.5.2"
   }

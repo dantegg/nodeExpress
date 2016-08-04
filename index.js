@@ -1,6 +1,7 @@
 var express = require('express');
 
 
+
 var slogans=[
   'mid or feed！',
   'noob!',
@@ -9,7 +10,22 @@ var slogans=[
   'asian monkey!'
 ]
 
+var resjson = [{
+  "id":0,name:"harry porter","price":99.99
+},{
+  "id":1,name:"xiaoming","price":123.321
+}]
+
+
+
 var app = express();
+
+var bodyParser = require('body-parser');
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
+
 
 var handlebars = require('express3-handlebars').create({defaultLayout:'main'});
 app.engine("handlebars",handlebars.engine);
@@ -36,7 +52,41 @@ app.get('/about',function(req,res){
   //res.send('About Dantegg\'s WORLD!');
 
   res.render('about');
-})
+});
+
+
+app.get('/thank-you',function (req,res) {
+  res.render('thankyou');
+});
+
+app.get('/api/resjson',function (req,res) {
+  res.json(resjson);
+});
+
+
+
+app.get('/newsletter',function (req,res) {
+  res.render('newsletter',{csrf:'CSRF token goes here'});
+});
+
+
+// app.post('/process',function (req,res) {
+//   console.log('Form (from querystring):'+req.query.form);
+//   console.log('CSRF token (from hidden form field):'+req.body._csrf);
+//   console.log('Name (from visible form field):'+req.body.name);
+//   console.log('Email (from visible form field):'+ req.body.email);
+//   res.redirect(303,'/thank-you');
+// })
+
+
+app.post('/process',function (req,res) {
+  console.log(req.accepts('json,html'));
+  if(req.xhr || req.accepts('json,html') ==='json'){
+    res.send({success:true});
+  }else {
+    res.redirect(303,'/thank-you');
+  }
+});
 
 //page 404
 app.use(function (req,res) {
