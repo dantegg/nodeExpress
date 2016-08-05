@@ -31,9 +31,13 @@
                 evt.preventDefault();
                 var action = $(this).attr('action');
                 var $container = $(this).closest('.formContainer');
+                console.log($('.newsletterForm').serialize());
+                console.log(action);
+                action += '&'+$('.newsletterForm').serialize();
                 $.ajax({
                     url:action,
                     type:"post",
+                    traditional:true,
                     success:function (data) {
                         if(data.success){
                             $container.html('<h2>thank you very much!</h2>')

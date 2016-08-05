@@ -22,7 +22,7 @@ var app = express();
 
 var bodyParser = require('body-parser');
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
@@ -80,8 +80,15 @@ app.get('/newsletter',function (req,res) {
 
 
 app.post('/process',function (req,res) {
-  console.log(req.accepts('json,html'));
+  console.log("1"+req.accepts('json,html'));
+  console.log("2"+req.xhr);
+  console.log("3"+req.accepts('json,html'));
   if(req.xhr || req.accepts('json,html') ==='json'){
+   // console.log(req.body);
+    console.log('Form (from querystring):'+req.query.form);
+    console.log('CSRF token (from hidden form field):'+req.query._csrf);
+    console.log('Name (from visible form field):'+req.query.name);
+    console.log('Email (from visible form field):'+ req.query.email);
     res.send({success:true});
   }else {
     res.redirect(303,'/thank-you');
