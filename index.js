@@ -1,4 +1,5 @@
 var express = require('express');
+var formidable = require('formidable');
 
 
 
@@ -69,7 +70,12 @@ app.get('/newsletter',function (req,res) {
   res.render('newsletter',{csrf:'CSRF token goes here'});
 });
 
+var jqupload = require("jquery-file-upload-middleware");
 
+app.get('/jqupload',function (req,res) {
+  console.log(__dirname+'/public');
+  res.render('jqupload');
+})
 // app.post('/process',function (req,res) {
 //   console.log('Form (from querystring):'+req.query.form);
 //   console.log('CSRF token (from hidden form field):'+req.body._csrf);
@@ -77,7 +83,17 @@ app.get('/newsletter',function (req,res) {
 //   console.log('Email (from visible form field):'+ req.body.email);
 //   res.redirect(303,'/thank-you');
 // })
-
+app.use('/upload',function (req,res,next) {
+  var now = Date.now();
+  jqupload.fileHandler({
+    uploadDir:function () {
+      return __dirname +'/public/uploads/'+now;
+    },
+    uploadUrl:function () {
+      return '/uploads/'+now;
+    }
+  })(req,res,next);
+});
 
 app.post('/process',function (req,res) {
   console.log("1"+req.accepts('json,html'));
@@ -94,6 +110,32 @@ app.post('/process',function (req,res) {
     res.redirect(303,'/thank-you');
   }
 });
+
+
+app.get('/contest/vacation-photo',function (req,res) {
+  var now = new Date();
+  res.render('contest/vacation-photo',{
+    year:now.getFullYear(),
+    month:now.getMonth()
+  })
+});
+
+
+app.post('/contest/vacation-photo/:year/:month',function (req,res) {
+  var form = new formidable.IncomingForm();
+  form.parse(req,function (err,fields,files) {
+    if (err) return res.redirect(303, '/error');
+    console.log('received fields:');
+    console.log(fields);
+    console.log('receoived files:');
+    console.log(files);
+    res.redirect(303, '/thank-you');
+  });
+});
+
+
+
+
 
 //page 404
 app.use(function (req,res) {
