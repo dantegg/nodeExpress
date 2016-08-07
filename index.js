@@ -21,6 +21,10 @@ var resjson = [{
 
 var app = express();
 
+var cookieParser = require('cookie-parser');
+
+app.use(cookieParser("secret"));
+
 var bodyParser = require('body-parser');
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -45,7 +49,9 @@ app.get('/',function(req,res){
   var randomSlogans = slogans[Math.floor(Math.random()*slogans.length)];
   console.log(randomSlogans)
   res.render('home',{slogan:randomSlogans});
-})
+  //res.cookie('dantegg','hahaha');
+  res.cookie('signed_dantegg','lol',{signed:true});
+});
 
 
 app.get('/about',function(req,res){
@@ -75,6 +81,7 @@ var jqupload = require("jquery-file-upload-middleware");
 app.get('/jqupload',function (req,res) {
   console.log(__dirname+'/public');
   res.render('jqupload');
+
 })
 // app.post('/process',function (req,res) {
 //   console.log('Form (from querystring):'+req.query.form);
@@ -94,6 +101,11 @@ app.use('/upload',function (req,res,next) {
     }
   })(req,res,next);
 });
+
+
+var credentials = require('./credentials');
+
+
 
 app.post('/process',function (req,res) {
   console.log("1"+req.accepts('json,html'));
