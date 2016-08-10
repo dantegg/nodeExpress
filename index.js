@@ -22,9 +22,16 @@ var resjson = [{
 var app = express();
 
 var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
 
 app.use(cookieParser("secret"));
-
+app.use(expressSession({
+  'secret':'12345',
+  'name':'testSession',
+  'cookie':{maxAge:80000},
+  'resave':false,
+  'saveUninitialized':true
+}))
 var bodyParser = require('body-parser');
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -49,8 +56,10 @@ app.get('/',function(req,res){
   var randomSlogans = slogans[Math.floor(Math.random()*slogans.length)];
   console.log(randomSlogans)
   res.render('home',{slogan:randomSlogans});
-  //res.cookie('dantegg','hahaha');
-  res.cookie('signed_dantegg','lol',{signed:true});
+  res.cookie('dantegg','testcookie');
+  //res.cookie('signed_dantegg','lol',{signed:true});
+  var ttt = req.cookies.dantegg;
+  console.log(ttt);
 });
 
 
@@ -59,6 +68,7 @@ app.get('/about',function(req,res){
   //res.send('About Dantegg\'s WORLD!');
 
   res.render('about');
+  console.log(req.cookies.signed_dantegg);
 });
 
 
