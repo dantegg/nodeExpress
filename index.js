@@ -1,7 +1,7 @@
 var express = require('express');
 var formidable = require('formidable');
-
-
+var ejs = require('ejs');
+var engines = require('consolidate');
 
 var slogans=[
   'mid or feed！',
@@ -41,7 +41,9 @@ app.use(bodyParser.json());
 
 var handlebars = require('express3-handlebars').create({defaultLayout:'main'});
 app.engine("handlebars",handlebars.engine);
-app.set('view engine','handlebars');
+app.engine("html",ejs.__express);
+app.set('html',engines.ejs);
+app.set('handlebars',engines.handlebars);
 
 
 app.set('port',process.env.PORT || 3000);
@@ -50,7 +52,7 @@ app.set('port',process.env.PORT || 3000);
 app.use(express.static(__dirname+'/public'));
 app.use(function (req,res,next) {
   res.locals.flash = req.session.flash;
-  delete req.session.flash;
+  //delete req.session.flash;
   next();
 })
 
@@ -66,6 +68,11 @@ app.get('/',function(req,res){
   console.log(ttt);
 });
 
+
+
+app.get('/aboutus',function (req,res) {
+  res.render(__dirname +'/public/html/about.html');
+})
 
 app.get('/about',function(req,res){
   //res.type('text/plain');
@@ -158,51 +165,8 @@ app.post('/newsletter', function(req, res){
   });
 });
 app.get('/newsletter/archive', function(req, res){
-  res.render('newsletter/archive');
-});
-app.post('/process',function (req,res) {
-  console.log("1"+req.accepts('json,html'));
-  console.log("2"+req.xhr);
-  console.log("3"+req.accepts('json,html'));
-  if(req.xhr || req.accepts('json,html') ==='json'){
-   // console.log(req.body);
-    console.log('Form (from querystring):'+req.query.form);
-    console.log('CSRF token (from hidden form field):'+req.query._csrf);
-    console.log('Name (from visible form field):'+req.query.name);
-    console.log('Email (from visible form field):'+ req.query.email);
-    res.send({success:true});
-    var name = req.query.name;
-    var email = req.query.email;
-    if(!email.match(VALID_EMAIL_REGEX)){
-      if(req.xhr) return res.json({error:"Invalid name email address"});
-      req.session.flash={
-        type:'danger',
-        intro:'Validation error!',
-        message:"the email address you entered was not valid!"
-      };
-      return res.redirect(303,'/newsletter/archieve');
-    }
-    new NewsletterSignup({name:name,email:email}).save(function (err) {
-      if(err){
-        if(req.xhr) return res.json({error:'Database error.'});
-        req.session.flash={
-          type:'danger',
-          intro:'Database error!',
-          message:'there was a database error;please try again later'
-        }
-        return res.redirect(303,'/newsletter/archieve');
-      }
-      if(req.xhr) return res.json({success:true});
-      req.session.flash={
-        type:'success',
-        intro:'thank you',
-        message:'you have now been signed up for the newsletter!'
-      };
-      return res.redirect(303,'/newsletter/archive')
-    })
-  }else {
-    res.redirect(303,'/thank-you');
-  }
+    console.log(req.session);
+    res.render('newsletter/archive');
 });
 
 
