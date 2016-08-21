@@ -1,6 +1,26 @@
 var express = require('express');
 var formidable = require('formidable');
+var nodemailer =  require('nodemailer');
+var credentials = require('./credentials');
 
+var mailTranspot = nodemailer.createTransport('SMTP',{
+  host:'smtp.mxhichina.com',
+  secureConnection:true,
+  port:465,
+  auth:{
+    user: credentials.mailAddress.user,
+    pass: credentials.mailAddress.password
+  }
+});
+
+mailTranspot.sendMail({
+  from:credentials.sender,
+  to:credentials.sendAddress,
+  subject:'群发测试',
+  text:'nodejs&express 测试群发邮件,不要回哦~~~ from service-tec'
+},function (err) {
+  if(err) console.error('Unable to send email:'+ err);
+})
 
 
 var slogans=[
@@ -117,7 +137,7 @@ app.use('/upload',function (req,res,next) {
 });
 
 
-var credentials = require('./credentials');
+
 
 function NewsletterSignup(){
 }
