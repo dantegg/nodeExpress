@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>email</title>
+</head>
+<body>
+<div style="text-align:center;font-size:24px;font-weight:bold">
+    发送邮件
+</div>
+<div ng-app="emailApp" ng-controller="emailControl">
+<div style="padding-top:50px;text-align:center">
+    <label>邮箱地址</label>
+    <input type="emnil" id="emailAddress" ng-model="emailAddress" style="width:400px;"/>
+</div>
+<div style="padding-top:20px;text-align:center">
+    <label>邮件标题</label>
+    <input type="text" id="emailTitle" ng-model="emailTitle" style="width:400px">
+</div>
+<div style="padding-top:20px;text-align:center">
+    <div style="text-align: left;width:475px;margin:auto;margin-bottom:20px;">
+        邮件正文
+    </div>
+    <textarea rows="5" style="width: 50%;" ng-model="emailContent" id="emailContent"></textarea>
+</div>
+<div style="text-align:center;padding-top:30px">
+    <button id="sendEmailBtn" ng-click="send()">发送</button>
+</div>
+</div>
+
+<!--<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" charset="utf-8"></script>-->
+<script src="./html/angular.min.js"></script>
+<script>
+    var emailApp = angular.module('emailApp',[]);
+    emailApp.controller('emailControl',function ($scope,$http) {
+        $scope.send = function () {
+            $http({
+                method:'post',
+                url:'/email/post',
+                data:{
+                    emailAddress:$scope.emailAddress,
+                    emailTitle:$scope.emailTitle,
+                    emailContent:$scope.emailContent
+                }
+            }).success(function (res) {
+                if(res.success === true){
+                                        console.log(res)
+                                        alert('发送成功!');
+                                    }
+            })
+        }
+
+    })
+
+    //    $('#sendEmailBtn').click(function () {
+    //        var emailAddress = $('#emailAddress').val();
+    //        var emailTitle = $('#emailTitle').val();
+    //        var emailContent = $('#emailContent').val();
+    //        $.ajax({
+    //            type:'post',
+    //            dataType:'json',
+    //            url:'/email/post',
+    //            data:{
+    //                emailAddress:emailAddress,
+    //                emailTitle:emailTitle,
+    //                emailContent:emailContent
+    //            },
+    //            success:function (res) {
+    //                if(res.success === true){
+    //                    console.log(res)
+    //                    alert('发送成功!');
+    //                }
+    //            }
+    //        })
+    //    })
+
+</script>
+</body>
+</html>
