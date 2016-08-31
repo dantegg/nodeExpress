@@ -3,29 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>email</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8" />
 </head>
 <body>
-<div style="text-align:center;font-size:24px;font-weight:bold">
-    发送邮件
-</div>
-<div ng-app="emailApp" ng-controller="emailControl">
-<div style="padding-top:50px;text-align:center">
-    <label>邮箱地址</label>
-    <input type="emnil" id="emailAddress" ng-model="emailAddress" style="width:400px;"/>
-</div>
-<div style="padding-top:20px;text-align:center">
-    <label>邮件标题</label>
-    <input type="text" id="emailTitle" ng-model="emailTitle" style="width:400px">
-</div>
-<div style="padding-top:20px;text-align:center">
-    <div style="text-align: left;width:475px;margin:auto;margin-bottom:20px;">
-        邮件正文
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">邮件群发</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <!--<li><a href="#"><span class="glyphicon glyphicon-user"></span></a></li>-->
+            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+        </ul>
     </div>
-    <textarea rows="5" style="width: 50%;" ng-model="emailContent" id="emailContent"></textarea>
+</nav>
+
+
+<div ng-app="emailApp" ng-controller="emailControl">
+    <div class="container">
+        <div style="font-size:24px;font-weight:bold;margin-bottom:20px;">
+            发送邮件
+        </div>
+        <div class="col-md-8">
+<div class="form-group">
+    <label for="eaddress">邮箱地址</label>
+    <input id="eaddress"type="email" id="emailAddress" class="form-control" ng-model="emailAddress" style="width:400px;"/>
 </div>
-<div style="text-align:center;padding-top:30px">
-    <button id="sendEmailBtn" ng-click="send()">发送</button>
+<div class="form-group">
+    <label>邮件标题</label>
+    <input type="text" id="emailTitle" class="form-control" ng-model="emailTitle" style="width:400px">
 </div>
+<div class="form-group">
+    <label style="text-align: left;width:475px;margin:auto;margin-bottom:20px;">
+        邮件正文
+    </label>
+    <textarea rows="5" style="width: 50%;" ng-model="emailContent" id="emailContent" class="form-control"></textarea>
+</div>
+        <div style="padding-top:30px">
+            <button class="btn-primary btn-lg" id="sendEmailBtn" ng-click="send()">发送</button>
+        </div>
+        </div>
+    </div>
+
 </div>
 
 <!--<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js" charset="utf-8"></script>-->
@@ -34,11 +53,14 @@
     var emailApp = angular.module('emailApp',[]);
     emailApp.controller('emailControl',function ($scope,$http) {
         $scope.send = function () {
+            //console.log($scope.emailAddress);
+            var emailAddressList = $scope.emailAddress.split(',');
+            console.log(emailAddressList);
             $http({
                 method:'post',
                 url:'/email/post',
                 data:{
-                    emailAddress:$scope.emailAddress,
+                    emailAddress:emailAddressList,
                     emailTitle:$scope.emailTitle,
                     emailContent:$scope.emailContent
                 }

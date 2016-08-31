@@ -224,11 +224,18 @@ app.post('/email/post',function (req,res) {
   var emailTitle = req.body.emailTitle||''
   var emailContent = req.body.emailContent||''
   // input validation
-  console.log(email)
-  if(!email.match(VALID_EMAIL_REGEX)) {
+  var emailList = [];
+  emailList = email
+  var emailString = emailList.join(',')
+  console.log(emailString)
+  console.log(credentials.sender)
+  for(var i in email){
+    if(!email[i].match(VALID_EMAIL_REGEX)) {
 
-    if(req.xhr) return res.json({ error: 'Invalid name email address.' });
+      if(req.xhr) return res.json({ error: 'Invalid name email address.' });
+    }
   }
+
   var mailTranspot = nodemailer.createTransport('SMTP',{
   host:'smtp.mxhichina.com',
   secureConnection:true,
@@ -241,7 +248,7 @@ app.post('/email/post',function (req,res) {
 
 mailTranspot.sendMail({
   from:credentials.sender,
-  to:email,
+  to:emailString,
   subject:emailTitle,
   text:emailContent
 },function (err) {
