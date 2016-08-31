@@ -3,24 +3,24 @@ var formidable = require('formidable');
 var nodemailer =  require('nodemailer');
 var credentials = require('./credentials');
 
-var mailTranspot = nodemailer.createTransport('SMTP',{
-  host:'smtp.mxhichina.com',
-  secureConnection:true,
-  port:465,
-  auth:{
-    user: credentials.mailAddress.user,
-    pass: credentials.mailAddress.password
-  }
-});
-
-mailTranspot.sendMail({
-  from:credentials.sender,
-  to:credentials.sendAddress,
-  subject:'群发测试',
-  text:'nodejs&express 测试群发邮件,不要回哦~~~ from service-tec'
-},function (err) {
-  if(err) console.error('Unable to send email:'+ err);
-})
+// var mailTranspot = nodemailer.createTransport('SMTP',{
+//   host:'smtp.mxhichina.com',
+//   secureConnection:true,
+//   port:465,
+//   auth:{
+//     user: credentials.mailAddress.user,
+//     pass: credentials.mailAddress.password
+//   }
+// });
+//
+// mailTranspot.sendMail({
+//   from:credentials.sender,
+//   to:credentials.sendAddress,
+//   subject:'群发测试',
+//   text:'nodejs&express 测试群发邮件,不要回哦~~~ from service-tec'
+// },function (err) {
+//   if(err) console.error('Unable to send email:'+ err);
+// })
 
 
 var ejs = require('ejs');
@@ -65,9 +65,9 @@ app.use(bodyParser.json());
 var handlebars = require('express3-handlebars').create({defaultLayout:'main'});
 app.engine("handlebars",handlebars.engine);
 app.engine("html",ejs.__express);
-app.set('html',engines.ejs);
-app.set('handlebars',engines.handlebars);
-
+// app.set('html',engines.ejs);
+// app.set('handlebars',engines.handlebars);
+app.set("view engine",'handlebars');
 
 app.set('port',process.env.PORT || 3000);
 
@@ -214,7 +214,55 @@ app.post('/contest/vacation-photo/:year/:month',function (req,res) {
   });
 });
 
+app.get('/email',function (req,res) {
+  res.render(__dirname +'/public/html/email.html')
+})
 
+app.post('/email/post',function (req,res) {
+  //var name = req.body.name || ''
+      var email = req.body.emailAddress || '';
+  var emailTitle = req.body.emailTitle||''
+  var emailContent = req.body.emailContent||''
+  // input validation
+  console.log(email)
+  if(!email.match(VALID_EMAIL_REGEX)) {
+
+    if(req.xhr) return res.json({ error: 'Invalid name email address.' });
+  }
+  var mailTranspot = nodemailer.createTransport('SMTP',{
+  host:'smtp.mxhichina.com',
+  secureConnection:true,
+  port:465,
+  auth:{
+    user: credentials.mailAddress.user,
+    pass: credentials.mailAddress.password
+  }
+});
+
+mailTranspot.sendMail({
+  from:credentials.sender,
+  to:email,
+  subject:emailTitle,
+  text:emailContent
+},function (err) {
+  if(err) {
+    console.error('Unable to send email:' + err);
+    return (res.json({
+      success: false,
+      msg: '发送失败'
+    }))
+  }else{
+    return(res.json({
+      success:true,
+      msg:'发送成功'
+    }))
+  }
+})
+
+  
+
+
+})
 
 
 
