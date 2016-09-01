@@ -188,6 +188,7 @@ app.post('/newsletter', function(req, res){
     return res.redirect(303, '/newsletter/archive');
   });
 });
+
 app.get('/newsletter/archive', function(req, res){
     console.log(req.session);
     res.render('newsletter/archive');
@@ -225,6 +226,12 @@ app.get('/login',function (req,res) {
 app.post('/login/user',function (req,res) {
   var username = req.body.username || '';
   var userpass = req.body.userpass||''
+  return res.json({ success: true });
+  req.session.flash = {
+    type: 'success',
+    username:"dantegg"
+  };
+  //return res.redirect(303, '/email');
 })
 
 app.get('/email',function (req,res) {
