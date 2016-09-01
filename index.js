@@ -183,6 +183,7 @@ app.post('/newsletter', function(req, res){
       type: 'success',
       intro: 'Thank you!',
       message: 'You have now been signed up for the newsletter.',
+      username:"dantegg"
     };
     return res.redirect(303, '/newsletter/archive');
   });
@@ -214,7 +215,20 @@ app.post('/contest/vacation-photo/:year/:month',function (req,res) {
   });
 });
 
+
+//用户登陆渲染
+app.get('/login',function (req,res) {
+  res.render(__dirname+'/public/html/login.html')
+})
+
+//用户登陆请求
+app.post('/login/user',function (req,res) {
+  var username = req.body.username || '';
+  var userpass = req.body.userpass||''
+})
+
 app.get('/email',function (req,res) {
+  console.log(req.session)
   res.render(__dirname +'/public/html/email.html')
 })
 
