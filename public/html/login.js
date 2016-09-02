@@ -1,6 +1,23 @@
 /**
  * Created by dantegg on 16-9-1.
  */
+// function loginBtn() {
+//     var uname = $('#username').val()
+//     var upass = $('#password').val()
+//     $.ajax({
+//         url:'/login',
+//         data:{
+//             username:uname,
+//             upass:upass
+//         },
+//         dataType:'json',
+//         type:'post',
+//         success:function (res) {
+//             console.log(res)
+//         }
+//     })
+// }
+
 
 var app = angular.module('loginApp',[]);
 app.controller('loginControl',function ($scope,$http) {
@@ -9,7 +26,7 @@ app.controller('loginControl',function ($scope,$http) {
         //console.log($scope.user.password)
         $http({
             method:'post',
-            url:'/login/user',
+            url:'/login',
             data:{
                 username:$scope.user.userName,
                 userpass:$scope.user.password
@@ -22,3 +39,4 @@ app.controller('loginControl',function ($scope,$http) {
         })
     }
 })
+

@@ -6,20 +6,21 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8" />
 </head>
 <body>
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">邮件群发</a>
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-            <!--<li><a href="#"><span class="glyphicon glyphicon-user"></span></a></li>-->
-            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
-        </ul>
-    </div>
-</nav>
+
 
 
 <div ng-app="emailApp" ng-controller="emailControl">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">邮件群发</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <!--<li><a href="#"><span class="glyphicon glyphicon-user"></span></a></li>-->
+                <li><a>{{userName}}</a> </li>
+            </ul>
+        </div>
+    </nav>
     <div class="container">
         <div style="font-size:24px;font-weight:bold;margin-bottom:20px;">
             发送邮件
@@ -52,6 +53,13 @@
 <script>
     var emailApp = angular.module('emailApp',[]);
     emailApp.controller('emailControl',function ($scope,$http) {
+        $http({
+            method:'get',
+            url:'/userInfo'
+        }).success(function (res) {
+            console.log(res)
+            $scope.userName = res.username
+        })
         $scope.send = function () {
             //console.log($scope.emailAddress);
             var emailAddressList = $scope.emailAddress.split(',');

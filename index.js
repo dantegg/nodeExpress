@@ -217,31 +217,19 @@ app.post('/contest/vacation-photo/:year/:month',function (req,res) {
 });
 
 
-//用户登陆渲染
-app.get('/login',function (req,res) {
-  res.render(__dirname+'/public/html/login.html')
-})
-
-//用户登陆请求
-app.post('/login/user',function (req,res) {
-  var username = req.body.username || '';
-  var userpass = req.body.userpass||''
-  return res.json({ success: true });
-  req.session.flash = {
-    type: 'success',
-    username:"dantegg"
-  };
-  //return res.redirect(303, '/email');
-})
-
 app.get('/email',function (req,res) {
-  console.log(req.session)
-  res.render(__dirname +'/public/html/email.html')
+ console.log(req.session)
+  res.render(__dirname +'/public/html/email.html',{username:'ttt'})
+})
+
+app.get('/userInfo',function (req,res) {
+  return res.json({
+    'username':req.session.flash.username
+  })
 })
 
 app.post('/email/post',function (req,res) {
-  //var name = req.body.name || ''
-      var email = req.body.emailAddress || '';
+  var email = req.body.emailAddress || '';
   var emailTitle = req.body.emailTitle||''
   var emailContent = req.body.emailContent||''
   // input validation
@@ -258,39 +246,60 @@ app.post('/email/post',function (req,res) {
   }
 
   var mailTranspot = nodemailer.createTransport('SMTP',{
-  host:'smtp.mxhichina.com',
-  secureConnection:true,
-  port:465,
-  auth:{
-    user: credentials.mailAddress.user,
-    pass: credentials.mailAddress.password
-  }
-});
+    host:'smtp.mxhichina.com',
+    secureConnection:true,
+    port:465,
+    auth:{
+      user: credentials.mailAddress.user,
+      pass: credentials.mailAddress.password
+    }
+  });
 
-mailTranspot.sendMail({
-  from:credentials.sender,
-  to:emailString,
-  subject:emailTitle,
-  text:emailContent
-},function (err) {
-  if(err) {
-    console.error('Unable to send email:' + err);
-    return (res.json({
-      success: false,
-      msg: '发送失败'
-    }))
-  }else{
-    return(res.json({
-      success:true,
-      msg:'发送成功'
-    }))
-  }
+  mailTranspot.sendMail({
+    from:credentials.sender,
+    to:emailString,
+    subject:emailTitle,
+    text:emailContent
+  },function (err) {
+    if(err) {
+      console.error('Unable to send email:' + err);
+      return (res.json({
+        success: false,
+        msg: '发送失败'
+      }))
+    }else{
+      return(res.json({
+        success:true,
+        msg:'发送成功'
+      }))
+    }
+  })
+
+
+
+
 })
 
-  
 
-
+//用户登陆渲染
+app.get('/login',function (req,res) {
+  res.render(__dirname+'/public/html/login.html')
+  //res.redirect("/email");
 })
+
+//用户登陆请求
+app.post('/login',function (req,res) {
+  var username = req.body.username || ''
+  var userpass = req.body.userpass||''
+  req.session.flash = {
+    type: 'success',
+    username:"dantegg"
+  };
+  return res.json({ success: true });
+  //res.redirect(303,'/email');
+})
+
+
 
 
 
