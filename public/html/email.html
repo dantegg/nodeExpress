@@ -53,13 +53,13 @@
 <script>
     var emailApp = angular.module('emailApp',[]);
     emailApp.controller('emailControl',function ($scope,$http) {
-        $http({
-            method:'get',
-            url:'/userInfo'
-        }).success(function (res) {
-            console.log(res)
-            $scope.userName = res.username
-        })
+//        $http({
+//            method:'get',
+//            url:'/userInfo'
+//        }).success(function (res) {
+//            console.log(res)
+//            $scope.userName = res.username
+//        })
         $scope.send = function () {
             //console.log($scope.emailAddress);
             var emailAddressList = $scope.emailAddress.split(',');

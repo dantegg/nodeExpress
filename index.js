@@ -55,6 +55,8 @@ app.use(expressSession({
   'resave':false,
   'saveUninitialized':true
 }))
+
+
 var bodyParser = require('body-parser');
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,7 +81,9 @@ app.use(function (req,res,next) {
   next();
 })
 
+
 app.get('/',function(req,res){
+
   //res.type('text/plain');
   //res.send('Dantegg\'s WORLD!');
   var randomSlogans = slogans[Math.floor(Math.random()*slogans.length)];
@@ -218,15 +222,16 @@ app.post('/contest/vacation-photo/:year/:month',function (req,res) {
 
 
 app.get('/email',function (req,res) {
- console.log(req.session)
+ //console.log(req.session)
   res.render(__dirname +'/public/html/email.html',{username:'ttt'})
 })
 
-app.get('/userInfo',function (req,res) {
-  return res.json({
-    'username':req.session.flash.username
-  })
-})
+// app.get('/userInfo',function (req,res) {
+//
+//   return res.json({
+//     'username':req.session.flash.username
+//   })
+// })
 
 app.post('/email/post',function (req,res) {
   var email = req.body.emailAddress || '';
